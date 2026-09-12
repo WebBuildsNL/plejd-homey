@@ -1,0 +1,4 @@
+# Hoort in git, maar niet in de app-bundel op je Homey.
+tools/
+README.md
+.eslintrc.json
