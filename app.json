@@ -1,0 +1,447 @@
+{
+  "id": "se.emilohman.plejd",
+  "version": "3.5.4",
+  "compatibility": ">=5.0.0",
+  "sdk": 3,
+  "brandColor": "#48c5d6",
+  "name": {
+    "en": "Plejd"
+  },
+  "description": {
+    "en": "Smart lighting for everyone"
+  },
+  "tags": {
+    "en": [
+      "plejd, light, bluetooth, BLE, dimmer"
+    ]
+  },
+  "category": [
+    "lights"
+  ],
+  "permissions": [
+    "homey:wireless:ble"
+  ],
+  "images": {
+    "large": "/assets/images/large.png",
+    "small": "/assets/images/small.png"
+  },
+  "author": {
+    "name": "Emil Öhman",
+    "email": "emilohman@gmail.com"
+  },
+  "contributors": {
+    "developers": [
+      {
+        "name": "Emil Öhman",
+        "email": "emilohman@gmail.com"
+      }
+    ]
+  },
+  "contributing": {
+    "donate": {
+      "paypal": {
+        "username": "emilohman2"
+      }
+    }
+  },
+  "bugs": {
+    "url": "https://github.com/emilohman/homey-plejd/issues"
+  },
+  "source": "https://github.com/emilohman/homey-plejd",
+  "homeyCommunityTopicId": 43266,
+  "drivers": [
+    {
+      "id": "plejd",
+      "name": {
+        "en": "Plejd"
+      },
+      "class": "light",
+      "capabilities": [
+        "dim",
+        "onoff"
+      ],
+      "images": {
+        "large": "/drivers/plejd/assets/images/large.png",
+        "small": "/drivers/plejd/assets/images/small.png"
+      },
+      "pair": [
+        {
+          "id": "login",
+          "template": "login_credentials",
+          "options": {
+            "logo": "../../../assets/images/large.png"
+          }
+        },
+        {
+          "id": "site",
+          "navigation": {
+            "prev": "login"
+          }
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "prev": "site",
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "settings": [
+        {
+          "id": "device_class",
+          "type": "dropdown",
+          "value": "light",
+          "label": {
+            "en": "Device class"
+          },
+          "values": [
+            {
+              "id": "light",
+              "label": {
+                "en": "Light"
+              }
+            },
+            {
+              "id": "socket",
+              "label": {
+                "en": "Socket"
+              }
+            }
+          ]
+        },
+        {
+          "id": "dimmable",
+          "type": "checkbox",
+          "value": true,
+          "label": {
+            "en": "Dimmable"
+          }
+        },
+        {
+          "id": "color_temperature",
+          "type": "checkbox",
+          "value": false,
+          "label": {
+            "en": "Color temperature"
+          }
+        }
+      ]
+    },
+    {
+      "id": "button",
+      "name": {
+        "en": "Plejd button"
+      },
+      "class": "button",
+      "capabilities": [],
+      "images": {
+        "large": "/drivers/button/assets/images/large.png",
+        "small": "/drivers/button/assets/images/small.png"
+      },
+      "pair": [
+        {
+          "id": "login",
+          "template": "login_credentials",
+          "options": {
+            "logo": "../../../assets/images/large.png"
+          }
+        },
+        {
+          "id": "site",
+          "navigation": {
+            "prev": "login"
+          }
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "prev": "site",
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ]
+    },
+    {
+      "id": "motion",
+      "name": {
+        "en": "Plejd motion sensor"
+      },
+      "class": "sensor",
+      "capabilities": [
+        "alarm_motion"
+      ],
+      "images": {
+        "large": "/drivers/motion/assets/images/large.png",
+        "small": "/drivers/motion/assets/images/small.png"
+      },
+      "pair": [
+        {
+          "id": "login",
+          "template": "login_credentials",
+          "options": {
+            "logo": "../../../assets/images/large.png"
+          }
+        },
+        {
+          "id": "site",
+          "navigation": {
+            "prev": "login"
+          }
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "prev": "site",
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ]
+    },
+    {
+      "id": "cover",
+      "name": {
+        "en": "Plejd cover"
+      },
+      "class": "curtain",
+      "capabilities": [
+        "windowcoverings_set"
+      ],
+      "images": {
+        "large": "/drivers/cover/assets/images/large.png",
+        "small": "/drivers/cover/assets/images/small.png"
+      },
+      "pair": [
+        {
+          "id": "login",
+          "template": "login_credentials",
+          "options": {
+            "logo": "../../../assets/images/large.png"
+          }
+        },
+        {
+          "id": "site",
+          "navigation": {
+            "prev": "login"
+          }
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "prev": "site",
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ]
+    },
+    {
+      "id": "thermostat",
+      "name": {
+        "en": "Plejd thermostat"
+      },
+      "class": "thermostat",
+      "capabilities": [
+        "target_temperature",
+        "measure_temperature",
+        "onoff"
+      ],
+      "images": {
+        "large": "/drivers/thermostat/assets/images/large.png",
+        "small": "/drivers/thermostat/assets/images/small.png"
+      },
+      "pair": [
+        {
+          "id": "login",
+          "template": "login_credentials",
+          "options": {
+            "logo": "../../../assets/images/large.png"
+          }
+        },
+        {
+          "id": "site",
+          "navigation": {
+            "prev": "login"
+          }
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "prev": "site",
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ]
+    }
+  ],
+  "flow": {
+    "triggers": [
+      {
+        "id": "button_pressed",
+        "title": {
+          "en": "A button has been pressed"
+        },
+        "tokens": [
+          {
+            "name": "button",
+            "type": "number",
+            "title": {
+              "en": "Button"
+            },
+            "example": 2
+          }
+        ],
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=button"
+          }
+        ]
+      },
+      {
+        "id": "button_pressed2",
+        "title": {
+          "en": "Button ... has been pressed"
+        },
+        "titleFormatted": {
+          "en": "Button [[button]] has been pressed"
+        },
+        "args": [
+          {
+            "type": "dropdown",
+            "name": "button",
+            "title": {
+              "en": "Button number"
+            },
+            "values": [
+              {
+                "id": "1",
+                "label": {
+                  "en": "Left up"
+                }
+              },
+              {
+                "id": "3",
+                "label": {
+                  "en": "Left down"
+                }
+              },
+              {
+                "id": "2",
+                "label": {
+                  "en": "Right up"
+                }
+              },
+              {
+                "id": "4",
+                "label": {
+                  "en": "Right down"
+                }
+              }
+            ]
+          },
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=button"
+          }
+        ]
+      },
+      {
+        "id": "scene_triggered",
+        "title": {
+          "en": "Scene ... has been triggered"
+        },
+        "titleFormatted": {
+          "en": "Scene [[scene]] has been triggered"
+        },
+        "args": [
+          {
+            "type": "autocomplete",
+            "name": "scene",
+            "title": {
+              "en": "Select scene"
+            }
+          }
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "dim_over_time",
+        "title": {
+          "en": "Dim from ... to ... over ... seconds"
+        },
+        "titleFormatted": {
+          "en": "Dim [[brightness_from]] to [[brightness_to]] over [[seconds]] seconds"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=plejd"
+          },
+          {
+            "name": "brightness_from",
+            "type": "range",
+            "title": {
+              "en": "Brightness from"
+            },
+            "label": "%",
+            "labelMultiplier": 100,
+            "min": 0,
+            "max": 1,
+            "step": 0.01
+          },
+          {
+            "name": "brightness_to",
+            "type": "range",
+            "title": {
+              "en": "Brightness to"
+            },
+            "label": "%",
+            "labelMultiplier": 100,
+            "min": 0,
+            "max": 1,
+            "step": 0.01
+          },
+          {
+            "name": "seconds",
+            "type": "number",
+            "title": {
+              "en": "Time"
+            },
+            "label": "s",
+            "min": 1,
+            "max": 600,
+            "step": 1
+          }
+        ]
+      }
+    ]
+  }
+}
