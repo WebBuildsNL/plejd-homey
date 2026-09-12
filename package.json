@@ -1,18 +1,14 @@
 {
-  "name": "com.plejd",
+  "name": "nl.dennissmink.plejd",
   "version": "1.0.0",
-  "description": "Adds support for Plejd devices.",
+  "description": "Plejd via bluetooth, zonder gateway en zonder cloud-login.",
   "main": "app.js",
   "scripts": {
     "eslint_fix": "eslint --fix ."
   },
   "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "axios": "1.6.2",
-    "tinycolor2": "^1.6.0",
-    "homey-log": "^2.1.0"
-  },
+  "license": "MIT",
+  "dependencies": {},
   "devDependencies": {
     "eslint": "^8.54.0",
     "eslint-config-athom": "^3.1.1"

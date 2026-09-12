@@ -1,11 +1,10 @@
 'use strict';
 
 const Homey = require('homey');
-const { Log } = require('homey-log');
 
 const plejd = require('./lib/plejd');
 
-const api = require('./lib/api');
+const provisioning = require('./lib/provisioning');
 
 const TRAIT_POWER = 0x01;
 const TRAIT_COVER = 0x10;
@@ -51,8 +50,6 @@ class PlejdApp extends Homey.App {
   // }
 
   async onInit() {
-    this.homeyLog = new Log({ homey: this.homey });
-
     this.log('PlejdApp is running...');
 
     this.homey.settings.unset('keepalive');
@@ -100,59 +97,19 @@ class PlejdApp extends Homey.App {
   }
 
   async fetchScenes() {
-    const sessionToken = this.homey.settings.get('sessionToken');
-    const username = this.homey.settings.get('username');
-    const password = this.homey.settings.get('password');
+    try {
+      const scenes = provisioning.getScenes(this.homey);
 
-    let plejdApi;
-    let sites;
-
-    if (sessionToken) {
-      this.log('Using saved session token');
-      plejdApi = new api.PlejdApi(null, null, sessionToken, this.log);
-
-      sites = await plejdApi.getSites();
-    }
-
-    if (!sites) {
-      this.log('No saved session token, trying to login');
-      if (!username || !password) {
-        this.log('No username or password');
-        return [
-          {
-            name: 'Set username and password in settings',
-          },
-        ];
+      if (scenes.length === 0) {
+        return [{ name: 'Geen scenes in je site-gegevens' }];
       }
 
-      plejdApi = new api.PlejdApi(username, password, null, this.log);
-      const login = await plejdApi.login();
+      return scenes;
+    } catch (error) {
+      this.error('fetchScenes', error);
 
-      if (login) {
-        this.log('Login successful');
-        sites = await plejdApi.getSites();
-      } else {
-        this.error('Login failed');
-
-        return [
-          {
-            name: 'Login failed',
-          },
-        ];
-      }
+      return [{ name: String(error.message || error) }];
     }
-
-    const siteId = sites[0].id;
-    const site = await plejdApi.getSite(siteId);
-    const { scenes, sceneIndex } = site.result[0];
-
-    return scenes.map((scene) => {
-      this.log('Scene', scene.title, scene.sceneId, sceneIndex[scene.sceneId]);
-      return {
-        name: scene.title,
-        id: sceneIndex[scene.sceneId],
-      };
-    });
   }
 
   async registerDevice(device) {

@@ -1,62 +1,230 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <!-- The '/homey.js' script must be included in your settings view to work -->
     <script
       type="text/javascript"
       src="/homey.js"
       data-origin="settings"
     ></script>
+    <style>
+      .plejd-intro {
+        line-height: 1.5;
+      }
+      .plejd-intro code {
+        background: rgba(127, 127, 127, 0.15);
+        padding: 1px 5px;
+        border-radius: 4px;
+      }
+      #site-json {
+        width: 100%;
+        min-height: 180px;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 12px;
+        resize: vertical;
+      }
+      .plejd-status {
+        padding: 10px 12px;
+        border-radius: 6px;
+        margin: 14px 0;
+        line-height: 1.45;
+      }
+      .plejd-status.ok {
+        background: rgba(46, 160, 67, 0.15);
+      }
+      .plejd-status.error {
+        background: rgba(218, 54, 51, 0.15);
+      }
+      .plejd-devices {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+      }
+      .plejd-devices th,
+      .plejd-devices td {
+        text-align: left;
+        padding: 6px 8px;
+        border-bottom: 1px solid rgba(127, 127, 127, 0.25);
+        vertical-align: top;
+      }
+      .plejd-devices th {
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      .plejd-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 12px;
+      }
+      .plejd-actions button {
+        flex: 1 1 180px;
+      }
+    </style>
   </head>
   <body>
-    <h1 class="homey-title" data-i18n="Plejd settings">
-      <!-- This will be filled with the translated string with key 'settings.title'. -->
-    </h1>
+    <h1 class="homey-title">Plejd (lokaal)</h1>
+
+    <p class="homey-subtitle plejd-intro">
+      Deze app praat rechtstreeks via bluetooth met je Plejd-mesh en logt nooit
+      in bij Plejd. Daarvoor heeft hij eenmalig de definitie van je installatie
+      nodig: de cryptoKey en de mesh-adressen van je apparaten.
+    </p>
+
+    <p class="plejd-intro">
+      Haal die op met <code>node tools/plejd-dump.mjs</code> op je computer en
+      plak hieronder de volledige inhoud van <code>plejd-site.json</code>.
+      Herhaal dit als je in de Plejd-app apparaten toevoegt of hernoemt.
+    </p>
+
+    <div id="status" class="plejd-status" style="display: none"></div>
 
     <fieldset class="homey-form-fieldset">
-      <legend class="homey-form-legend">Login</legend>
-
+      <legend class="homey-form-legend">Site-gegevens</legend>
       <div class="homey-form-group">
-        <label class="homey-form-label" for="username">Username</label>
-        <input class="homey-form-input" id="username" type="email" value="" />
-      </div>
-      <div class="homey-form-group">
-        <label class="homey-form-label" for="password">Password</label>
-        <input class="homey-form-input" id="password" type="password" value="" />
+        <textarea
+          id="site-json"
+          class="homey-form-input"
+          spellcheck="false"
+          placeholder='{ "result": [ { "site": { ... }, "plejdMesh": { ... } } ] }'
+        ></textarea>
       </div>
     </fieldset>
 
-    <button id="save" class="homey-button-primary-full">Save changes</button>
+    <div class="plejd-actions">
+      <button id="save" class="homey-button-primary-full">
+        Opslaan en controleren
+      </button>
+      <button id="clear" class="homey-button-danger-full">Wissen</button>
+    </div>
+
+    <div id="devices"></div>
 
     <script type="text/javascript">
-      // a method named 'onHomeyReady' must be present in your code
       function onHomeyReady(Homey) {
-        // Tell Homey we're ready to be displayed
         Homey.ready();
 
-        var usernameElement = document.getElementById("username");
-        var passwordElement = document.getElementById("password");
-        var saveElement = document.getElementById("save");
+        var textarea = document.getElementById('site-json');
+        var statusEl = document.getElementById('status');
+        var devicesEl = document.getElementById('devices');
+        var saveButton = document.getElementById('save');
+        var clearButton = document.getElementById('clear');
 
-        Homey.get("username", function (err, username) {
-          if (err) return Homey.alert(err);
-          usernameElement.value = username;
+        function showStatus(message, kind) {
+          statusEl.textContent = message;
+          statusEl.className = 'plejd-status ' + kind;
+          statusEl.style.display = 'block';
+        }
+
+        function escapeHtml(value) {
+          return String(value).replace(/[&<>"']/g, function (char) {
+            return {
+              '&': '&amp;',
+              '<': '&lt;',
+              '>': '&gt;',
+              '"': '&quot;',
+              "'": '&#39;',
+            }[char];
+          });
+        }
+
+        function renderSummary(summary) {
+          if (!summary) {
+            devicesEl.innerHTML = '';
+            return;
+          }
+
+          var rows = summary.devices
+            .map(function (device) {
+              var capabilities = ['aan/uit'];
+              if (device.dimmable) capabilities.push('dimmen');
+              if (device.colorTemp) capabilities.push('kleurtemperatuur');
+
+              return (
+                '<tr>' +
+                '<td>' + escapeHtml(device.name) + '</td>' +
+                '<td>' + escapeHtml(device.hardwareName) + '</td>' +
+                '<td>' + escapeHtml(device.address) + '</td>' +
+                '<td>' + escapeHtml(device.type) + '</td>' +
+                '<td>' + capabilities.join(', ') + '</td>' +
+                '</tr>'
+              );
+            })
+            .join('');
+
+          devicesEl.innerHTML =
+            '<h2 class="homey-title">Gevonden in ' +
+            escapeHtml(summary.title) +
+            '</h2>' +
+            '<table class="plejd-devices">' +
+            '<thead><tr><th>Naam</th><th>Model</th><th>Adres</th><th>Type</th><th>Kan</th></tr></thead>' +
+            '<tbody>' + rows + '</tbody></table>' +
+            '<p class="plejd-intro">Voeg ze toe via <em>Apparaten &rarr; + &rarr; Plejd (lokaal)</em>.</p>';
+        }
+
+        function applyState(state) {
+          if (state && state.configured) {
+            showStatus(
+              'Ingesteld: ' +
+                state.summary.deviceCount +
+                ' apparaat/apparaten, ' +
+                state.summary.sceneCount +
+                ' scene(s). Je Plejd-wachtwoord staat niet op deze Homey.',
+              'ok',
+            );
+            renderSummary(state.summary);
+          } else {
+            showStatus('Nog niet ingesteld. Plak hierboven je site-JSON.', 'error');
+            renderSummary(null);
+          }
+        }
+
+        Homey.api('GET', '/summary', null, function (err, state) {
+          if (err) return showStatus('Kon status niet ophalen: ' + err, 'error');
+          applyState(state);
         });
 
-        Homey.get("password", function (err, password) {
-          if (err) return Homey.alert(err);
-          passwordElement.value = password;
+        saveButton.addEventListener('click', function () {
+          var raw = textarea.value.trim();
+
+          if (!raw) {
+            return showStatus('Plak eerst de inhoud van plejd-site.json.', 'error');
+          }
+
+          var parsed;
+          try {
+            parsed = JSON.parse(raw);
+          } catch (e) {
+            return showStatus('Dit is geen geldige JSON: ' + e.message, 'error');
+          }
+
+          saveButton.disabled = true;
+          showStatus('Bezig met opslaan...', 'ok');
+
+          Homey.api('POST', '/site', { site: parsed }, function (err, state) {
+            saveButton.disabled = false;
+
+            if (err) {
+              return showStatus(String(err.message || err), 'error');
+            }
+
+            textarea.value = '';
+            applyState(state);
+          });
         });
 
-        saveElement.addEventListener("click", function (e) {
-          Homey.set("username", usernameElement.value, function (err) {
-            if (err) return Homey.alert(err);
-          });
-          Homey.set("password", passwordElement.value, function (err) {
-            if (err) return Homey.alert(err);
-          });
+        clearButton.addEventListener('click', function () {
+          Homey.confirm(
+            'Site-gegevens wissen? Je apparaten blijven bestaan maar kunnen niet meer worden aangestuurd tot je opnieuw een site-JSON plakt.',
+            'warning',
+            function (err, confirmed) {
+              if (err || !confirmed) return;
 
-          Homey.alert("Settings saved");
+              Homey.api('DELETE', '/site', null, function (err, state) {
+                if (err) return showStatus(String(err.message || err), 'error');
+                applyState(state);
+              });
+            },
+          );
         });
       }
     </script>

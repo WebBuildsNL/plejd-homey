@@ -1,14 +1,16 @@
 {
-  "id": "se.emilohman.plejd",
-  "version": "3.5.4",
+  "id": "nl.dennissmink.plejd",
+  "version": "1.0.0",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "brandColor": "#48c5d6",
   "name": {
-    "en": "Plejd"
+    "en": "Plejd Local",
+    "nl": "Plejd (lokaal)"
   },
   "description": {
-    "en": "Smart lighting for everyone"
+    "en": "Plejd over Bluetooth, without a gateway and without a cloud login",
+    "nl": "Plejd via bluetooth, zonder gateway en zonder cloud-login"
   },
   "tags": {
     "en": [
@@ -26,29 +28,16 @@
     "small": "/assets/images/small.png"
   },
   "author": {
-    "name": "Emil Öhman",
-    "email": "emilohman@gmail.com"
+    "name": "Dennis Smink"
   },
   "contributors": {
     "developers": [
       {
-        "name": "Emil Öhman",
+        "name": "Emil Ohman",
         "email": "emilohman@gmail.com"
       }
     ]
   },
-  "contributing": {
-    "donate": {
-      "paypal": {
-        "username": "emilohman2"
-      }
-    }
-  },
-  "bugs": {
-    "url": "https://github.com/emilohman/homey-plejd/issues"
-  },
-  "source": "https://github.com/emilohman/homey-plejd",
-  "homeyCommunityTopicId": 43266,
   "drivers": [
     {
       "id": "plejd",
@@ -66,23 +55,9 @@
       },
       "pair": [
         {
-          "id": "login",
-          "template": "login_credentials",
-          "options": {
-            "logo": "../../../assets/images/large.png"
-          }
-        },
-        {
-          "id": "site",
-          "navigation": {
-            "prev": "login"
-          }
-        },
-        {
           "id": "list_devices",
           "template": "list_devices",
           "navigation": {
-            "prev": "site",
             "next": "add_devices"
           }
         },
@@ -145,23 +120,9 @@
       },
       "pair": [
         {
-          "id": "login",
-          "template": "login_credentials",
-          "options": {
-            "logo": "../../../assets/images/large.png"
-          }
-        },
-        {
-          "id": "site",
-          "navigation": {
-            "prev": "login"
-          }
-        },
-        {
           "id": "list_devices",
           "template": "list_devices",
           "navigation": {
-            "prev": "site",
             "next": "add_devices"
           }
         },
@@ -186,23 +147,9 @@
       },
       "pair": [
         {
-          "id": "login",
-          "template": "login_credentials",
-          "options": {
-            "logo": "../../../assets/images/large.png"
-          }
-        },
-        {
-          "id": "site",
-          "navigation": {
-            "prev": "login"
-          }
-        },
-        {
           "id": "list_devices",
           "template": "list_devices",
           "navigation": {
-            "prev": "site",
             "next": "add_devices"
           }
         },
@@ -227,23 +174,9 @@
       },
       "pair": [
         {
-          "id": "login",
-          "template": "login_credentials",
-          "options": {
-            "logo": "../../../assets/images/large.png"
-          }
-        },
-        {
-          "id": "site",
-          "navigation": {
-            "prev": "login"
-          }
-        },
-        {
           "id": "list_devices",
           "template": "list_devices",
           "navigation": {
-            "prev": "site",
             "next": "add_devices"
           }
         },
@@ -270,23 +203,9 @@
       },
       "pair": [
         {
-          "id": "login",
-          "template": "login_credentials",
-          "options": {
-            "logo": "../../../assets/images/large.png"
-          }
-        },
-        {
-          "id": "site",
-          "navigation": {
-            "prev": "login"
-          }
-        },
-        {
           "id": "list_devices",
           "template": "list_devices",
           "navigation": {
-            "prev": "site",
             "next": "add_devices"
           }
         },
@@ -443,5 +362,19 @@
         ]
       }
     ]
+  },
+  "api": {
+    "getSummary": {
+      "method": "GET",
+      "path": "/summary"
+    },
+    "saveSite": {
+      "method": "POST",
+      "path": "/site"
+    },
+    "clearSite": {
+      "method": "DELETE",
+      "path": "/site"
+    }
   }
 }
