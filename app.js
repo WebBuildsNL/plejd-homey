@@ -20,6 +20,29 @@ class PlejdApp extends Homey.App {
     return id.replace(/:/g, '').toLowerCase();
   }
 
+  /**
+   * Herkent het Plejd-mesh in een BLE-advertentie.
+   *
+   * De naam is niet betrouwbaar: afhankelijk van of het apparaat de verkorte
+   * of de volledige lokale naam meestuurt zie je 'P mesh' of
+   * 'P mesh DEE3CA832006'. Daarom eerst op het adres van een gekoppeld
+   * apparaat matchen, en pas daarna op de naam als prefix.
+   */
+  _isPlejdMeshAdvertisement(advertisement) {
+    const uuid = this._normalizeBleId(advertisement.uuid);
+
+    if (
+      uuid
+      && this.devicesList.some(
+        (device) => this._normalizeBleId(device.getData().id) === uuid,
+      )
+    ) {
+      return true;
+    }
+
+    return String(advertisement.localName || '').startsWith('P mesh');
+  }
+
   _isConnectableDevice(device) {
     // Backwards compatibility, if traits is not set, assume it's connectable
     if (!device.getStoreValue('traits')) {
@@ -345,9 +368,10 @@ class PlejdApp extends Homey.App {
           );
         }
 
-        // if (!currentAdvertisement && this.devicesList.some(device => device.getData().id.toLowerCase() === advertisement.uuid.toLowerCase())) {
-        if (!currentAdvertisement && advertisement.localName === 'P mesh') {
-          // && !this.advertisementsNotWorking.some(uuid => uuid === advertisement.uuid)
+        if (
+          !currentAdvertisement
+          && this._isPlejdMeshAdvertisement(advertisement)
+        ) {
           currentAdvertisement = advertisement;
         }
 

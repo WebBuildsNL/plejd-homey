@@ -6,5 +6,9 @@
   "1.0.1": {
     "en": "Fix: an on/off notification no longer reports a fabricated 100% brightness, which made dim_changed flows fire and lights turn back on.",
     "nl": "Fix: een aan/uit-melding meldt niet langer een verzonnen helderheid van 100%, waardoor dim_changed-flows afgingen en lampen weer aansprongen."
+  },
+  "1.0.2": {
+    "en": "Fix: the Plejd mesh was only recognised when it advertised the exact name \"P mesh\". Devices advertising \"P mesh <address>\" could never be found, leaving them permanently unavailable.",
+    "nl": "Fix: het Plejd-mesh werd alleen herkend bij de exacte naam \"P mesh\". Apparaten die zich als \"P mesh <adres>\" melden waren onvindbaar en bleven daardoor permanent onbeschikbaar."
   }
 }
