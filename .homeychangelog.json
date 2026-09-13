@@ -10,5 +10,9 @@
   "1.0.2": {
     "en": "Fix: the Plejd mesh was only recognised when it advertised the exact name \"P mesh\". Devices advertising \"P mesh <address>\" could never be found, leaving them permanently unavailable.",
     "nl": "Fix: het Plejd-mesh werd alleen herkend bij de exacte naam \"P mesh\". Apparaten die zich als \"P mesh <adres>\" melden waren onvindbaar en bleven daardoor permanent onbeschikbaar."
+  },
+  "1.0.3": {
+    "en": "Look for the mesh by the known BLE address of a paired device before falling back to a broad scan. A Plejd unit advertises sparsely and is easily missed among dozens of other devices.",
+    "nl": "Zoek het mesh eerst op het bekende BLE-adres van een gekoppeld apparaat, voordat een brede scan wordt geprobeerd. Een Plejd-unit adverteert spaarzaam en verdwijnt makkelijk tussen tientallen andere apparaten."
   }
 }

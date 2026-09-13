@@ -318,15 +318,34 @@ class PlejdApp extends Homey.App {
       let advertisements = [];
 
       this.log('No saved mesh uuid found');
-      this.log('discover');
 
-      for (let retries = 0; retries < 10; retries++) {
-        let timeout = 15000;
+      // Eerst gericht zoeken op het BLE-adres van een gekoppeld apparaat.
+      // Een brede discover() vangt een Plejd-puck lang niet altijd binnen zijn
+      // scanvenster: hij adverteert spaarzaam en gaat kopje onder tussen
+      // tientallen andere apparaten. find() zoekt gericht op een bekend adres.
+      for (const device of this.devicesList) {
+        const bleId = this._normalizeBleId(device.getData().id);
 
-        if (retries > 0) {
-          timeout = 30000;
+        if (bleId) {
+          try {
+            this.log('find', bleId);
+            currentAdvertisement = await this.homey.ble.find(bleId);
+
+            if (currentAdvertisement) {
+              this.log('found paired device directly', bleId);
+              break;
+            }
+          } catch (error) {
+            this.error(`error finding ${bleId}: ${error}`);
+          }
         }
+      }
 
+      if (!currentAdvertisement) {
+        this.log('discover');
+      }
+
+      for (let retries = 0; !currentAdvertisement && retries < 10; retries++) {
         try {
           advertisements = await this.homey.ble.discover();
         } catch (error) {
@@ -343,7 +362,7 @@ class PlejdApp extends Homey.App {
         }
       }
 
-      if (advertisements.length === 0) {
+      if (!currentAdvertisement && advertisements.length === 0) {
         this.isConnecting = false;
         this.error('error finding Plejd devices after 10 retries');
 
