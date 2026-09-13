@@ -1,6 +1,6 @@
 {
   "name": "nl.dennissmink.plejd",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Plejd via bluetooth, zonder gateway en zonder cloud-login.",
   "main": "app.js",
   "scripts": {

@@ -2,5 +2,9 @@
   "1.0.0": {
     "en": "First release of this fork: pair from a local site JSON instead of a Plejd cloud login.",
     "nl": "Eerste versie van deze fork: koppelen via een lokale site-JSON in plaats van een Plejd cloud-login."
+  },
+  "1.0.1": {
+    "en": "Fix: an on/off notification no longer reports a fabricated 100% brightness, which made dim_changed flows fire and lights turn back on.",
+    "nl": "Fix: een aan/uit-melding meldt niet langer een verzonnen helderheid van 100%, waardoor dim_changed-flows afgingen en lampen weer aansprongen."
   }
 }

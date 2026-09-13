@@ -72,7 +72,7 @@ const TRAITS = [
 function decodeTraits(t) {
   const n = Number(t) || 0;
   const on = TRAITS.filter(([bit]) => (n & bit) === bit).map(([, name]) => name);
-  return `${n} (0x${n.toString(16)})${on.length ? ' = ' + on.join(' | ') : ''}`;
+  return `${n} (0x${n.toString(16)})${on.length ? ` = ${on.join(' | ')}` : ''}`;
 }
 
 const main = async () => {
@@ -81,7 +81,7 @@ const main = async () => {
 
   process.stdout.write('\nInloggen... ');
   const login = await post('login', { username, password });
-  const sessionToken = login.sessionToken;
+  const { sessionToken } = login;
   console.log('ok');
 
   const auth = { 'X-Parse-Session-Token': sessionToken };
@@ -105,7 +105,7 @@ const main = async () => {
 
   const rooms = Object.fromEntries((site.rooms || []).map((r) => [r.roomId, r.title]));
 
-  console.log('\n' + '='.repeat(78));
+  console.log(`\n${'='.repeat(78)}`);
   console.log(`SITE: ${site.site.title}`);
   console.log(`CRYPTO KEY: ${site.plejdMesh.cryptoKey}`);
   console.log(`MESH KEY:   ${site.plejdMesh.meshKey}`);
@@ -126,10 +126,10 @@ const main = async () => {
       }
     }
 
-    console.log('\n' + '-'.repeat(78));
+    console.log(`\n${'-'.repeat(78)}`);
     console.log(`NAAM        : ${device.title}${device.roomId && rooms[device.roomId] ? `  (kamer: ${rooms[device.roomId]})` : ''}`);
     console.log(`BLE deviceId: ${device.deviceId}`);
-    console.log(`MESH adres  : ${address}${addrNote.length ? '   [' + addrNote.join(', ') + ']' : ''}`);
+    console.log(`MESH adres  : ${address}${addrNote.length ? `   [${addrNote.join(', ')}]` : ''}`);
     console.log(`hardwareId  : ${pd.hardwareId}`);
     console.log(`MODEL (fw)  : ${pd.firmware?.notes ?? '?'}   fw-versie: ${pd.firmware?.version ?? '?'}`);
     console.log(`outputType  : ${device.outputType ?? '(niet gezet)'}`);
@@ -152,7 +152,7 @@ const main = async () => {
     }
   }
 
-  console.log('\n' + '='.repeat(78));
+  console.log(`\n${'='.repeat(78)}`);
   console.log(`Volledige ruwe dump geschreven naar: ${outPath}`);
   console.log('Let op: dat bestand bevat je cryptoKey. Niet delen / niet committen.');
   console.log('='.repeat(78));

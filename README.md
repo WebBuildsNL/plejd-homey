@@ -107,6 +107,7 @@ hun mesh-adres niet verandert.
 ## Ontwikkelen
 
 ```bash
+node tools/test-notifications.cjs       # BLE-meldingen coderen en terugparsen
 node tools/test-provisioning.cjs        # provisioning + pairing tegen echte site-data
 homey app validate --level debug        # manifest en assets
 npx eslint .                            # stijl

@@ -106,7 +106,11 @@ class PlejdDevice extends Homey.Device {
       // this.log('Device reveiving state', this.getData().plejdId, this.getData().dimmable, state);
       await this.setCapabilityValue('onoff', state.state);
 
-      if (this.hasCapability('dim') && state.dim !== undefined) {
+      if (
+        this.hasCapability('dim') &&
+        state.dim !== undefined &&
+        state.dim !== null
+      ) {
         await this.setCapabilityValue('dim', state.dim / 255);
       }
 

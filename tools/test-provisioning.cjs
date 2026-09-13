@@ -7,14 +7,16 @@
  * Gebruik: node tools/test-provisioning.cjs [pad/naar/plejd-site.json]
  */
 
+'use strict';
+
 const { readFileSync } = require('node:fs');
 const { resolve } = require('node:path');
 const assert = require('node:assert');
 
-const ROOT = resolve(__dirname, '..');
+const provisioning = require('../lib/provisioning');
+const apiHandlers = require('../api');
 
-const provisioning = require(resolve(ROOT, 'lib/provisioning.js'));
-const apiHandlers = require(resolve(ROOT, 'api.js'));
+const ROOT = resolve(__dirname, '..');
 
 // Minimale nabootsing van wat de app van Homey gebruikt.
 const store = new Map();
@@ -66,7 +68,7 @@ const run = async () => {
   assert.ok(store.get('cryptokey'), 'cryptokey moet gezet zijn');
   console.log('   site:', state.summary.title);
   console.log('   apparaten:', state.summary.deviceCount, ' scenes:', state.summary.sceneCount);
-  console.log('   cryptokey gezet:', String(store.get('cryptokey')).slice(0, 5) + '...');
+  console.log('   cryptokey gezet:', `${String(store.get('cryptokey')).slice(0, 5)}...`);
 
   console.log('\n5. Apparatenlijst per koppelscherm');
   for (const driver of ['plejd', 'button', 'cover', 'motion', 'thermostat']) {
