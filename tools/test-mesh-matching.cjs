@@ -34,8 +34,9 @@ const app = {
   _normalizeBleId: PlejdApp.prototype._normalizeBleId,
 };
 
-const matches = (advertisement) =>
-  PlejdApp.prototype._isPlejdMeshAdvertisement.call(app, advertisement);
+function matches(advertisement) {
+  return PlejdApp.prototype._isPlejdMeshAdvertisement.call(app, advertisement);
+}
 
 const cases = [
   {

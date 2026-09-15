@@ -14,5 +14,9 @@
   "1.0.3": {
     "en": "Look for the mesh by the known BLE address of a paired device before falling back to a broad scan. A Plejd unit advertises sparsely and is easily missed among dozens of other devices.",
     "nl": "Zoek het mesh eerst op het bekende BLE-adres van een gekoppeld apparaat, voordat een brede scan wordt geprobeerd. Een Plejd-unit adverteert spaarzaam en verdwijnt makkelijk tussen tientallen andere apparaten."
+  },
+  "1.0.4": {
+    "en": "Fix: a connection dropping during service discovery started two reconnect attempts at once, which kept breaking each other so the device never came back.",
+    "nl": "Fix: een verbinding die wegviel tijdens service discovery startte twee herverbindpogingen tegelijk, die elkaar steeds afbraken waardoor het apparaat niet meer terugkwam."
   }
 }

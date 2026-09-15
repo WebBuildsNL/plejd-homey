@@ -83,6 +83,7 @@ class PlejdApp extends Homey.App {
     this.isConnecting = false;
     this.isConnected = false;
     this.doReconnectDelay = false;
+    this.isReconnectPending = false;
     this.writeList = [];
     this.plejdCommands = null;
     this.advertisementsNotWorking = [];
@@ -214,10 +215,17 @@ class PlejdApp extends Homey.App {
   async reconnect() {
     this.log('Start reconnecting');
 
-    if (this.reconnectTimeoutIndex) {
+    // Een wegvallende verbinding meldt zich via twee paden tegelijk: het
+    // 'disconnect'-event van de peripheral en de catch rond getService. De
+    // timer hieronder wordt pas na een await gezet, en disconnect() wist die
+    // referentie ook nog. Zonder deze synchrone vlag glippen beide aanroepen
+    // door, en breken twee connect()-ketens elkaars verbinding af.
+    if (this.reconnectTimeoutIndex || this.isReconnectPending) {
       this.log('Reconnect already scheduled');
       return Promise.resolve(true);
     }
+
+    this.isReconnectPending = true;
 
     if (!this.isDisconnecting) {
       await this.disconnect();
@@ -229,6 +237,7 @@ class PlejdApp extends Homey.App {
       this.reconnectTimeoutIndex = this.homey.setTimeout(
         async () => {
           this.reconnectTimeoutIndex = null;
+          this.isReconnectPending = false;
           this.doReconnectDelay = true;
 
           try {
